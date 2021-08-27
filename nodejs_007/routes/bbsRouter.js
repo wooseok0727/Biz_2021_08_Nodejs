@@ -21,7 +21,6 @@ router.get("/write", (req, res) => {
 router.post("/write", (req, res) => {
   // form 을 통해서 POST로 전송되어온 데이터는
   // req.body에 담겨서 온다
-  console.log(req.body);
   tbl_bbs.create(req.body).then((result) => res.redirect("/"));
 });
 

@@ -44,3 +44,8 @@ include 된 list 는 VO.실제테이블이름.변수 형식으로 사용해야 �
 - !{} 을 사용하는 방법 : div !{변수명}
   변수에 포함된 데이터(문자열)에 HTML tag가 포함되어 있고  
   view 화면에서 HTML tag를 적용하여 보여주고 싶을 때
+
+## nodejs file upload
+
+- 필요한 dependency : multer
+- npm install multer
