@@ -4,6 +4,13 @@ const moment = require("moment");
 
 const { tbl_orders, tbl_products } = require("../models/index");
 
+router.get("/time", (req, res) => {
+  const TIME = {
+    o_time: moment().format("HH:mm:ss"),
+  };
+  res.json({ TIME });
+});
+
 router.get("/select", (req, res) => {
   const p_code = req.query.p_code;
 

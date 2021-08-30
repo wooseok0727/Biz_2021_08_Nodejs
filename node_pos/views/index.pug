@@ -49,6 +49,25 @@ block content
                 } else {
                     table_id = target_table.parentNode.dataset.id;
                 }
+                let total = 0;
+
+                for(let i = 0; i < table_list.length; i++){
+                    if(table_list[i].o_table == table_id) {
+                        total += Number(table_list[i].o_total)
+                }
+                for(let i = 0; i < table_list.length; i++){
+                    if(table_list[i].o_table == table_id) {
+                        addOrder(
+                            table_list[i].o_pcode,
+                            table_list[i].o_pname,
+                            table_list[i].o_count,
+                            table_list[i].o_price,
+                            Number(total)
+                    )}
+                }
+                console.log(table_list[0].o_table)
+                console.log(table_id);
+            }
                 modalOverlay.classList.add("modal_overlay2")
                 modal.classList.add("modal_show")
                 table_name.innerHTML = `${table_id} 번 테이블`;
@@ -128,7 +147,7 @@ block content
             }
             total.innerHTML = `합계 : ${order_total}`
         }
-
+        //????
         btn_orders.addEventListener("click",()=>{
             let o_table = Number(table_name.innerText.substr(0,2));
             const list = order_list.childNodes;
@@ -136,21 +155,29 @@ block content
                  let table_oder = {};
                 table_oder.o_table = o_table;
                 table_oder.o_pcode = list[i].className;
+                table_oder.o_pname = list[i].childNodes[0].innerText;
                 table_oder.o_price = list[i].childNodes[1].innerText
                 table_oder.o_count = list[i].childNodes[2].innerText
                 table_oder.o_total = list[i].childNodes[3].innerText
                 table_list.push(table_oder)
             }
-            console.log(table_list.length)
-            for(let i = 0; i < table_list.length; i++){
-                console.log(table_list[i].o_table)
-            }
-
             alert("주문이 완료되었습니다")
             modal.classList.remove("modal_show")
             modalOverlay.classList.remove("modal_overlay2") 
             let table = document.querySelectorAll(".table");
+            const total = document.querySelector(".total");
             table[o_table - 1].style.backgroundColor = "#1f2739"
+            table[o_table - 1].childNodes[2].innerHTML = total.innerHTML;
+            fetch("/orders/time")
+                .then(res=>res.json())
+                .then(result=> {
+                   table[o_table -1].childNodes[0].innerHTML = result.TIME.o_time;
+                    const list = order_list.childNodes;
+                    for(let i = 0; i < list.length; i++){
+                       list[1].remove();
+                    }
+                })
+            
         })
         
 
