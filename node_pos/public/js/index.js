@@ -194,6 +194,10 @@ function transform() {
     });
   }
   animate();
+  gsap.to(document.querySelector(".total_open"), 1, {
+    opacity: 1,
+    display: "block",
+  });
 }
 
 function animate() {

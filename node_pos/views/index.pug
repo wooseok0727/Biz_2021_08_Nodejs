@@ -4,6 +4,7 @@ block content
     div.intro
         h1 김밥나라 POS
         p START
+    div.total_open 일별 판매데이터
     div#webgl
         canvas#reveal-effect
     div#css
@@ -26,6 +27,15 @@ block content
                     div.p_name= vo.p_name
                     div.p_price= vo.p_price
         .modal_close X
+    .total_modal 
+        h1.date= DATE.o_date
+        table.date_list 
+            tr
+                th 일자
+                th 상품명
+                th 판매수량
+                th 판매금액
+        .total_modal_close X
     .modal_overlay
             
 
@@ -37,11 +47,13 @@ block content
         const product_list = document.querySelector(".product_list");
         let table_name = document.querySelector("h1.table_name")
         const btn_orders = document.querySelector(".orders");
+        const btn_payment = document.querySelector(".payment");
+        const total_modal = document.querySelector(".total_modal ");
         let table_list = [];
 
         document.querySelector("#css").addEventListener("click",(e)=>{
-            const target_table = e.target;
-            const className = target_table.className;
+            let target_table = e.target;
+            let className = target_table.className;
             if(className == "table" || className == "name"){
                 let table_id;
                 if(className == "table") {
@@ -49,29 +61,28 @@ block content
                 } else {
                     table_id = target_table.parentNode.dataset.id;
                 }
-                let total = 0;
 
-                for(let i = 0; i < table_list.length; i++){
-                    if(table_list[i].o_table == table_id) {
-                        total += Number(table_list[i].o_total)
-                }
-                for(let i = 0; i < table_list.length; i++){
+                for(let i = 0; i < table_list.length; i++) {
                     if(table_list[i].o_table == table_id) {
                         addOrder(
                             table_list[i].o_pcode,
                             table_list[i].o_pname,
                             table_list[i].o_count,
                             table_list[i].o_price,
-                            Number(total)
-                    )}
+                            table_list[i].o_total); 
+                    }
                 }
-                console.log(table_list[0].o_table)
-                console.log(table_id);
-            }
+                let result = table_list.filter(id => id.o_table != table_id)
+                table_list = [];
+                console.log(table_list)
+                table_list = result;
+                console.log(table_list)
+                
+                totalOrder();
+               
                 modalOverlay.classList.add("modal_overlay2")
                 modal.classList.add("modal_show")
                 table_name.innerHTML = `${table_id} 번 테이블`;
-
             }
         })
 
@@ -106,6 +117,7 @@ block content
                         1,
                         result.ORDERS.p_price,
                         result.ORDERS.p_price)
+                    totalOrder();
                 })
                 
             }
@@ -133,26 +145,25 @@ block content
 
             order_list.appendChild(tr);
 
-            totalOrder();
         }
 
         function totalOrder(){
             const total = document.querySelector(".total");
-            const list = order_list.childNodes;
+            let list = order_list.childNodes;
             let order_total = 0;
             for(let i = 1; i < list.length; i++) {
-                let innerPrice = Number(list[i].childNodes[3].innerText)
+                let innerPrice = Number(list[i].childNodes[3].innerHTML)
                 order_total += Number(innerPrice);
 
             }
             total.innerHTML = `합계 : ${order_total}`
         }
-        //????
+
         btn_orders.addEventListener("click",()=>{
             let o_table = Number(table_name.innerText.substr(0,2));
-            const list = order_list.childNodes;
+            let list = order_list.childNodes;
             for(let i = 1; i < list.length; i++) {
-                 let table_oder = {};
+                 let table_oder = [];
                 table_oder.o_table = o_table;
                 table_oder.o_pcode = list[i].className;
                 table_oder.o_pname = list[i].childNodes[0].innerText;
@@ -168,16 +179,69 @@ block content
             const total = document.querySelector(".total");
             table[o_table - 1].style.backgroundColor = "#1f2739"
             table[o_table - 1].childNodes[2].innerHTML = total.innerHTML;
+            total.innerHTML = "합계 : 0";
             fetch("/orders/time")
                 .then(res=>res.json())
                 .then(result=> {
                    table[o_table -1].childNodes[0].innerHTML = result.TIME.o_time;
-                    const list = order_list.childNodes;
+                    let list = order_list.childNodes;
                     for(let i = 0; i < list.length; i++){
-                       list[1].remove();
+                       if(list[1]){
+                           list[1].remove();
+                       }
                     }
-                })
+                })  
+        })
+
+        btn_payment.addEventListener("click",()=>{
             
+            let json = [];
+            let o_tableId = Number(table_name.innerText.substr(0,2));
+            let list = order_list.childNodes;
+            for(let i = 1; i < list.length; i++) {
+                let oders = {};
+                oders.o_table = o_tableId;
+                oders.o_pcode = list[i].className;
+                oders.o_pname = list[i].childNodes[0].innerText;
+                oders.o_price = list[i].childNodes[1].innerText
+                oders.o_count = list[i].childNodes[2].innerText
+                oders.o_total = list[i].childNodes[3].innerText
+                json.push(oders)
+            }
+            let jsonString = JSON.stringify(json);
+            fetch("/orders/order",{
+                method: "POST",
+                body: jsonString,
+                headers: {"content-Type" : "application/json"}
+            })
+            .then(res=>res.text())
+            .then(result => {
+                alert("결제가 완료되었습니다");
+                let list = order_list.childNodes;
+                for(let i = 0; i < list.length; i++){
+                    if(list[1]){
+                        list[1].remove();
+                    }
+                }
+            })
+            modal.classList.remove("modal_show")
+            modalOverlay.classList.remove("modal_overlay2") 
+            let table = document.querySelectorAll(".table");
+            const total = document.querySelector(".total");
+            table[o_tableId - 1].style.backgroundColor = "#37AEF9"
+            table[o_tableId -1].childNodes[0].innerHTML = "";
+            table[o_tableId - 1].childNodes[2].innerHTML = "";
+            total.innerHTML = "합계 : 0";
+        })
+
+        document.querySelector(".total_open").addEventListener("click",()=>{
+            modalOverlay.classList.add("modal_overlay2")
+            total_modal.classList.add("modal_show")
+        })
+
+        document.querySelector(".total_modal_close").addEventListener("click",() => {
+            total_modal.classList.remove("modal_show")
+            modalOverlay.classList.remove("modal_overlay2")       
         })
         
 

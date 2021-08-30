@@ -23,4 +23,16 @@ router.get("/select", (req, res) => {
     });
 });
 
+router.post("/order", (req, res) => {
+  for (let i = 0; i < req.body.length; i++) {
+    if (i != req.body.length - 1) {
+      tbl_orders.create(req.body[i]);
+    } else {
+      tbl_orders.create(req.body[i]).then((result) => {
+        res.json(result);
+      });
+    }
+  }
+});
+
 module.exports = router;
