@@ -1,4 +1,8 @@
 import * as THREE from "/three/build/three.module.js";
+// CSS#Renderer 원본 상대 경로
+// node_pos\node_modules\three\examples\jsm\renderers\CSS3DRenderer.js
+// 원본에 import 문 from 절 'three' 대신
+// 경로 입력 from '/three/build/three.module.js';
 import {
   CSS3DRenderer,
   CSS3DObject,
