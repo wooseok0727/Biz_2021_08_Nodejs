@@ -36,6 +36,8 @@ block content
         const order_list = document.querySelector(".order_list");
         const product_list = document.querySelector(".product_list");
         let table_name = document.querySelector("h1.table_name")
+        const btn_orders = document.querySelector(".orders");
+        let table_list = [];
 
         document.querySelector("#css").addEventListener("click",(e)=>{
             const target_table = e.target;
@@ -82,13 +84,15 @@ block content
                     addOrder(
                         result.ORDERS.p_code,
                         result.ORDERS.p_name,
+                        1,
+                        result.ORDERS.p_price,
                         result.ORDERS.p_price)
                 })
                 
             }
         })
 
-        function addOrder(p_code,p_name,p_price){
+        function addOrder(p_code,p_name,count,p_price,total){
             const tr = document.createElement("tr");
             tr.className = p_code;
 
@@ -101,11 +105,11 @@ block content
             tr.appendChild(td_price);
 
             const td_count = document.createElement("td");
-            td_count.textContent = "1";
+            td_count.textContent = count;
             tr.appendChild(td_count);
 
             const td_total = document.createElement("td");
-            td_total.textContent = p_price;
+            td_total.textContent = total;
             tr.appendChild(td_total);
 
             order_list.appendChild(tr);
@@ -124,5 +128,30 @@ block content
             }
             total.innerHTML = `합계 : ${order_total}`
         }
+
+        btn_orders.addEventListener("click",()=>{
+            let o_table = Number(table_name.innerText.substr(0,2));
+            const list = order_list.childNodes;
+            for(let i = 1; i < list.length; i++) {
+                 let table_oder = {};
+                table_oder.o_table = o_table;
+                table_oder.o_pcode = list[i].className;
+                table_oder.o_price = list[i].childNodes[1].innerText
+                table_oder.o_count = list[i].childNodes[2].innerText
+                table_oder.o_total = list[i].childNodes[3].innerText
+                table_list.push(table_oder)
+            }
+            console.log(table_list.length)
+            for(let i = 0; i < table_list.length; i++){
+                console.log(table_list[i].o_table)
+            }
+
+            alert("주문이 완료되었습니다")
+            modal.classList.remove("modal_show")
+            modalOverlay.classList.remove("modal_overlay2") 
+            let table = document.querySelectorAll(".table");
+            table[o_table - 1].style.backgroundColor = "#1f2739"
+        })
+        
 
 
