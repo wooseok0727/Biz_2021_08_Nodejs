@@ -119,12 +119,10 @@ block content
             let order_total = 0;
             for(let i = 1; i < list.length; i++) {
                 let innerPrice = Number(list[i].childNodes[3].innerText)
-                console.log(innerPrice)
                 order_total += Number(innerPrice);
-                console.log(order_total)
 
             }
-            total.innerHTML = "합계 : " + order_total
+            total.innerHTML = `합계 : ${order_total}`
         }
 
 
