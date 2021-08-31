@@ -1,0 +1,47 @@
+extends layout
+
+block content
+    script(src="/js/order.js")
+    style.
+      section.main {
+        display: flex;
+        flex-wrap: wrap;
+
+        justify-content: center;
+        align-items: center;
+      }
+
+      article {
+        border: 1px solid #fb667a;
+        margin: 10px;
+        padding: 10px;
+        background-color: #fb667a;
+        height: 95%;
+      }
+      article.order_list {
+        flex: 2;
+      }
+      article.product_list {
+        flex: 3;
+        display: flex;
+        flex-wrap:wrap;
+      }
+      article.order_list h1 {
+        background-color: #fff842;
+        color:#2481ad;
+        text-align: center;
+      }
+      article.product_list div.menu {
+        width: 100px;
+        margin: 5px;
+        border: 1px solid #fff842;
+        background-color: #fff842;
+        color:#2481ad;
+        font-weight: bold;
+      }
+
+    article.order_list(data-table_id= table_id) 
+      h1 !{table_id}번 테이블 주문리스트
+    article.product_list
+      - for(let i = 0; i < 20; i++)
+          div.menu(data-menu_id= i + 1) !{i + 1}번 메뉴
