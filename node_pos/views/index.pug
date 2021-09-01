@@ -26,7 +26,18 @@ block content
                 div.p_code(data-id= vo.p_code)
                     div.p_name= vo.p_name
                     div.p_price= vo.p_price
+        .pay_kinds
+            h1.cash 현금 결제
+            h1.card 카드 결제
+        .pay_modal 
+            .message 
+                h1 결제 금액
+                h2.pay_total 
+                h1 결제 종류
+                h2.pay_kind 
+                div.btn_pay_complete 확인
         .modal_close X
+    
     .total_modal 
         h1.date= DATE.o_date
         table.date_list 
@@ -49,6 +60,7 @@ block content
         const btn_orders = document.querySelector(".orders");
         const btn_payment = document.querySelector(".payment");
         const total_modal = document.querySelector(".total_modal ");
+        let td_count = document.querySelector(".td_count")
         let table_list = [];
 
         document.querySelector("#css").addEventListener("click",(e)=>{
@@ -83,6 +95,10 @@ block content
         modalClose.addEventListener("click",() => {
             modal.classList.remove("modal_show")
             modalOverlay.classList.remove("modal_overlay2")
+            document.querySelector("div.order").style.visibility = ""
+            document.querySelector("div.product_list").style.visibility = ""
+            document.querySelector(".pay_kinds").style.display = "none"
+            document.querySelector(".pay_modal").style.display = "none"
             let p_list = document.querySelectorAll("tr.p_list");
             if(p_list) {
                 p_list.forEach((tr) => {
@@ -97,11 +113,12 @@ block content
                 const p_code = e.target.parentNode.dataset.id
                 const p_price = Number(e.target.parentNode.childNodes[1].innerText)
                 const list = order_list.childNodes;
+
                 for(let i = 0; i < list.length; i++){
                     if(list[i].id == p_code) {
-                        let innerCount = list[i].childNodes[2].innerText
+                        let innerCount = list[i].childNodes[2].childNodes[1].textContent
                         let innerPrice = list[i].childNodes[3].innerText
-                        list[i].childNodes[2].innerHTML = Number(innerCount) + 1
+                        list[i].childNodes[2].childNodes[1].textContent = Number(innerCount) + 1
                         list[i].childNodes[3].innerHTML = Number(innerPrice) + p_price;
                         totalOrder();
                         return false;
@@ -137,7 +154,18 @@ block content
             tr.appendChild(td_price);
 
             const td_count = document.createElement("td");
+            td_count.className = "td_count"
             td_count.textContent = count;
+
+            const span_minus = document.createElement("span");
+            span_minus.className = "minus"
+            span_minus.innerText = "-";
+            td_count.prepend(span_minus);
+            const span_plus = document.createElement("span");
+            span_plus.className = "plus"
+            span_plus.textContent = "+";
+            td_count.appendChild(span_plus);
+
             tr.appendChild(td_count);
 
             const td_total = document.createElement("td");
@@ -167,13 +195,23 @@ block content
             table_list = result;
             
             let list = order_list.childNodes;
+            if(!list[1]){
+                modal.classList.remove("modal_show")
+                modalOverlay.classList.remove("modal_overlay2") 
+                let table = document.querySelectorAll(".table");
+                table[o_table - 1].style.backgroundColor = "#37AEF9"
+                table[o_table -1].childNodes[0].innerHTML = "";
+                table[o_table - 1].childNodes[2].innerHTML = "";
+                return false;
+            }
+
             for(let i = 1; i < list.length; i++) {
                  let table_oder = [];
                 table_oder.o_table = o_table;
                 table_oder.o_pcode = list[i].id;
                 table_oder.o_pname = list[i].childNodes[0].innerText;
                 table_oder.o_price = list[i].childNodes[1].innerText
-                table_oder.o_count = list[i].childNodes[2].innerText
+                table_oder.o_count = list[i].childNodes[2].childNodes[1].textContent
                 table_oder.o_total = list[i].childNodes[3].innerText
                 table_list.push(table_oder)
             }
@@ -199,41 +237,79 @@ block content
         })
 
         btn_payment.addEventListener("click",()=>{
-            
-            let json = [];
-            let o_tableId = Number(table_name.innerText.substr(0,2));
+
             let list = order_list.childNodes;
+            if(!list[1]){
+                alert("주문메뉴를 선택해주세요")
+                return false;
+            }
+
+            if(confirm("결제하시겠습니까?")){
+                document.querySelector("div.order").style.visibility = "hidden"
+                document.querySelector("div.product_list").style.visibility = "hidden"
+                document.querySelector(".pay_kinds").style.display = "block"
+            }
+
+        })
+
+        document.querySelector(".pay_kinds").addEventListener("click",(e)=>{
+            const target = e.target
+            if(target.tagName === "H1") {
+                if(target.className.includes("cash")) {
+                    document.querySelector("h2.pay_kind").innerText = `"현금"`
+                } else if(target.className.includes("card")) {
+                    document.querySelector("h2.pay_kind").innerText = `"카드"`
+                }
+                const pay_total = document.querySelector("div.total").textContent.substr(5);
+                document.querySelector("h2.pay_total").textContent = `"${pay_total}원"` ;
+
+                document.querySelector(".pay_kinds").style.display = "none"
+                document.querySelector(".pay_modal").style.display = "block"
+
+            }
+
+        })
+
+
+        document.querySelector(".btn_pay_complete").addEventListener("click",()=>{
+            
+            let o_tableId = Number(table_name.textContent.substr(0,2));
+            let json = [];
+            let list = order_list.childNodes;
+
             for(let i = 1; i < list.length; i++) {
                 let oders = {};
                 oders.o_table = o_tableId;
                 oders.o_pcode = list[i].id;
-                oders.o_pname = list[i].childNodes[0].innerText;
-                oders.o_price = list[i].childNodes[1].innerText
-                oders.o_count = list[i].childNodes[2].innerText
-                oders.o_total = list[i].childNodes[3].innerText
+                oders.o_price = list[i].childNodes[1].textContent
+                oders.o_count = list[i].childNodes[2].childNodes[1].textContent
+                oders.o_total = list[i].childNodes[3].textContent
                 json.push(oders)
             }
             let jsonString = JSON.stringify(json);
-            fetch("/orders/order",{
-                method: "POST",
-                body: jsonString,
-                headers: {"content-Type" : "application/json"}
-            })
-            .then(res=>res.text())
-            .then(result => {
-                alert("결제가 완료되었습니다");
+             fetch("/orders/order",{
+                 method: "POST",
+                 body: jsonString,
+                 headers: {"content-Type" : "application/json"}
+             })
+             .then(res=>res.text())
+             .then(result => {
+                 alert("결제가 완료되었습니다");
 
-                let results = table_list.filter(id => id.o_table != o_tableId)
-                table_list = [];
-                table_list = results;
+                 let results = table_list.filter(id => id.o_table != o_tableId)
+                 table_list = [];
+                 table_list = results;
 
-                let p_list = document.querySelectorAll("tr.p_list");
-                if(p_list) {
-                    p_list.forEach((tr) => {
-                    order_list.removeChild(tr);
-                    });
-                }   
-            })
+                 let p_list = document.querySelectorAll("tr.p_list");
+                 if(p_list) {
+                     p_list.forEach((tr) => {
+                     order_list.removeChild(tr);
+                     });
+                 }   
+             })
+            document.querySelector("div.order").style.visibility = ""
+            document.querySelector("div.product_list").style.visibility = ""
+            document.querySelector(".pay_modal").style.display = "none"
             modal.classList.remove("modal_show")
             modalOverlay.classList.remove("modal_overlay2") 
             let table = document.querySelectorAll(".table");
@@ -242,6 +318,32 @@ block content
             table[o_tableId -1].childNodes[0].innerHTML = "";
             table[o_tableId - 1].childNodes[2].innerHTML = "";
             total.innerHTML = "합계 : 0";
+        })
+
+        order_list.addEventListener("click",(e)=>{
+            const target = e.target;
+            if(target.tagName === "SPAN") {
+                if(target.className.includes("minus")) {
+                    let minus = target.nextSibling.textContent;
+                    let price = target.parentNode.previousSibling.textContent;
+                    let total = target.parentNode.nextSibling.textContent;
+                    if(Number(minus) - 1 == 0) {
+                        target.parentNode.parentNode.remove();
+                        totalOrder();
+                        return false;
+                    }
+                    target.nextSibling.textContent = Number(minus) - 1;
+                    target.parentNode.nextSibling.textContent = Number(total) - Number(price);
+
+                } else if(target.className.includes("plus")) {
+                    let plus = target.previousSibling.textContent;
+                    let price = target.parentNode.previousSibling.textContent;
+                    let total = target.parentNode.nextSibling.textContent;
+                    target.previousSibling.textContent = Number(plus) + 1;
+                    target.parentNode.nextSibling.textContent = Number(total) + Number(price);
+                }
+                totalOrder();
+            }
         })
 
         document.querySelector(".total_open").addEventListener("click",()=>{
@@ -253,6 +355,8 @@ block content
             total_modal.classList.remove("modal_show")
             modalOverlay.classList.remove("modal_overlay2")       
         })
+
+        
         
 
 

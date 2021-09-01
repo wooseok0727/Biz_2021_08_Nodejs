@@ -124,6 +124,56 @@ div#css {
   opacity: 1;
 }
 
+.pay_modal {
+  position: absolute;
+  color: #ffffff;
+  font-size: 25px;
+  font-weight: bold;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  z-index: 15;
+  display: none;
+}
+
+.pay_modal h1,
+.pay_modal h2 {
+  padding: 10px;
+}
+
+.pay_modal h2 {
+  color: #fff842;
+}
+
+.pay_kinds {
+  position: absolute;
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: bold;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  z-index: 15;
+  display: none;
+}
+
+.pay_kinds h1 {
+  padding: 15px;
+}
+
+.pay_kinds h1:hover {
+  color: #fb667a;
+}
+
+.btn_pay_complete {
+  cursor: pointer;
+  color: #fb667a;
+  padding-top: 15px;
+}
+.btn_pay_complete:hover {
+  text-decoration: underline;
+}
+
 .modal_close {
   position: absolute;
   top: -60px;
@@ -132,6 +182,7 @@ div#css {
   font-size: 30px;
   font-weight: bold;
   cursor: pointer;
+  z-index: 15;
 }
 .order {
   width: 50%;
@@ -153,6 +204,20 @@ div#css {
 
 .order_list tr {
   border: 1px solid rgba(127, 255, 255, 0.25);
+}
+
+.order_list tr td:nth-of-type(3) {
+  display: flex;
+  justify-content: space-around;
+}
+
+.order_list tr td:nth-of-type(3) span {
+  cursor: pointer;
+  font-size: 25px;
+}
+
+.order_list tr td:nth-of-type(3) span:hover {
+  color: rgba(255, 248, 66, 0.75);
 }
 
 .total {
