@@ -202,6 +202,10 @@ function transform() {
     opacity: 1,
     display: "block",
   });
+  setTimeout(() => {
+    geometry.dispose();
+    material.dispose();
+  }, 2000);
 }
 
 function animate() {

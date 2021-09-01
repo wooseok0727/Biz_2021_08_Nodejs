@@ -72,11 +72,6 @@ block content
                             table_list[i].o_total); 
                     }
                 }
-                let result = table_list.filter(id => id.o_table != table_id)
-                table_list = [];
-                table_list = result;
-                console.log(table_list)
-                
                 totalOrder();
                
                 modalOverlay.classList.add("modal_overlay2")
@@ -87,7 +82,19 @@ block content
 
         modalClose.addEventListener("click",() => {
             modal.classList.remove("modal_show")
-            modalOverlay.classList.remove("modal_overlay2")       
+            modalOverlay.classList.remove("modal_overlay2")  
+            let list = order_list.childNodes;
+            list.forEach((tag)=> {
+                console.log(tag.tagName);
+                if(tag.tagName === "TR") {
+                    tag.remove();
+                }
+            })
+            for(let i = 0; i < list.length + 1; i++){
+                if(list[1]){
+                     list[1].remove();
+                }
+            }
         })
 
         product_list.addEventListener("click",(e)=>{
@@ -160,6 +167,10 @@ block content
 
         btn_orders.addEventListener("click",()=>{
             let o_table = Number(table_name.innerText.substr(0,2));
+            let result = table_list.filter(id => id.o_table != o_table)
+            table_list = [];
+            table_list = result;
+            
             let list = order_list.childNodes;
             for(let i = 1; i < list.length; i++) {
                  let table_oder = [];
@@ -216,6 +227,11 @@ block content
             .then(res=>res.text())
             .then(result => {
                 alert("결제가 완료되었습니다");
+
+                let results = table_list.filter(id => id.o_table != o_tableId)
+                table_list = [];
+                table_list = results;
+
                 let list = order_list.childNodes;
                 for(let i = 0; i < list.length; i++){
                     if(list[1]){
