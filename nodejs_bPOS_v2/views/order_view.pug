@@ -97,12 +97,16 @@ block content
         color: white;
       }
 
+      div.close span {
+        cursor:pointer;
+      }
+
     div.modal
       div.close
         span &times;
       div.message
-        h1 결제금액
+        h1 결제금액 : 
           span.pay_total
-        h2 결제종류
+        h2 결제종류 : 
           span.pay_qty
-        button 확인
+        button.btn_pay_complete 확인

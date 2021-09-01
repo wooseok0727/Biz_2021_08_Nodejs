@@ -12,6 +12,7 @@ sequelize.sequelize.sync().then((result) => {
   console.log("Database:", result.options.database);
   console.log("DB 연결 OK!!");
 });
+
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 
