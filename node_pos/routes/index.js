@@ -9,6 +9,7 @@ router.get("/", function (req, res, next) {
   const DATE = {
     o_date: moment().format("YYYY[-]MM[-]DD"),
   };
+  console.log(DATE.o_date);
 
   tbl_products.findAndCountAll().then((result) => {
     res.render("index", { PRODUCT: result.rows, DATE });

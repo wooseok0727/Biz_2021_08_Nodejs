@@ -302,6 +302,41 @@ div#css {
   color: #ffffff;
 }
 
+h1.title span.date {
+  margin: 0 15px;
+}
+
+h1.title span.prev,
+h1.title span.next {
+  cursor: pointer;
+}
+
+h1.title span.prev:hover,
+h1.title span.next:hover {
+  color: rgba(255, 248, 66, 0.75);
+}
+
+h4.title_list {
+  display: flex;
+  color: rgba(127, 255, 255, 1);
+}
+
+h4.title_list span {
+  cursor: pointer;
+}
+
+h4.title_list span:hover {
+  color: #fb667a;
+}
+
+span.month {
+  margin-right: 15px;
+}
+
+span.total_product {
+  margin-left: auto;
+}
+
 .total_open {
   position: absolute;
   top: 10px;

@@ -39,12 +39,19 @@ block content
         .modal_close X
     
     .total_modal 
-        h1.date= DATE.o_date
+        h1.title
+            span.prev &lt;
+            span.date= DATE.o_date
+            span.next &gt;
+        h4.title_list 
+            span.month 월별 조회
+            span.day 일별 조회
+            span.total_product 상품별 조회
         table.date_list 
             tr
-                th 일자
-                th 상품명
-                th 판매수량
+                th No
+                th 판매상품
+                th 수량
                 th 판매금액
         .total_modal_close X
     .modal_overlay
