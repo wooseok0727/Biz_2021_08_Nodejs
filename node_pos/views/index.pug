@@ -43,7 +43,7 @@ block content
         const modal = document.querySelector(".modal");
         const modalOverlay = document.querySelector(".modal_overlay")
         const modalClose = document.querySelector(".modal_close");
-        const order_list = document.querySelector(".order_list");
+        let order_list = document.querySelector(".order_list");
         const product_list = document.querySelector(".product_list");
         let table_name = document.querySelector("h1.table_name")
         const btn_orders = document.querySelector(".orders");
@@ -82,18 +82,12 @@ block content
 
         modalClose.addEventListener("click",() => {
             modal.classList.remove("modal_show")
-            modalOverlay.classList.remove("modal_overlay2")  
-            let list = order_list.childNodes;
-            list.forEach((tag)=> {
-                console.log(tag.tagName);
-                if(tag.tagName === "TR") {
-                    tag.remove();
-                }
-            })
-            for(let i = 0; i < list.length + 1; i++){
-                if(list[1]){
-                     list[1].remove();
-                }
+            modalOverlay.classList.remove("modal_overlay2")
+            let p_list = document.querySelectorAll("tr.p_list");
+            if(p_list) {
+                p_list.forEach((tr) => {
+                    order_list.removeChild(tr);
+                });
             }
         })
 
@@ -104,7 +98,7 @@ block content
                 const p_price = Number(e.target.parentNode.childNodes[1].innerText)
                 const list = order_list.childNodes;
                 for(let i = 0; i < list.length; i++){
-                    if(list[i].className == p_code) {
+                    if(list[i].id == p_code) {
                         let innerCount = list[i].childNodes[2].innerText
                         let innerPrice = list[i].childNodes[3].innerText
                         list[i].childNodes[2].innerHTML = Number(innerCount) + 1
@@ -131,7 +125,8 @@ block content
 
         function addOrder(p_code,p_name,count,p_price,total){
             const tr = document.createElement("tr");
-            tr.className = p_code;
+            tr.id = p_code;
+            tr.className = "p_list";
 
             const td_pname = document.createElement("td");
             td_pname.textContent = p_name;
@@ -175,7 +170,7 @@ block content
             for(let i = 1; i < list.length; i++) {
                  let table_oder = [];
                 table_oder.o_table = o_table;
-                table_oder.o_pcode = list[i].className;
+                table_oder.o_pcode = list[i].id;
                 table_oder.o_pname = list[i].childNodes[0].innerText;
                 table_oder.o_price = list[i].childNodes[1].innerText
                 table_oder.o_count = list[i].childNodes[2].innerText
@@ -194,13 +189,13 @@ block content
                 .then(res=>res.json())
                 .then(result=> {
                    table[o_table -1].childNodes[0].innerHTML = result.TIME.o_time;
-                    let list = order_list.childNodes;
-                    for(let i = 0; i < list.length; i++){
-                       if(list[1]){
-                           list[1].remove();
-                       }
+                    let p_list = document.querySelectorAll("tr.p_list");
+                    if(p_list) {
+                        p_list.forEach((tr) => {
+                        order_list.removeChild(tr);
+                        });
                     }
-                })  
+                }) 
         })
 
         btn_payment.addEventListener("click",()=>{
@@ -211,7 +206,7 @@ block content
             for(let i = 1; i < list.length; i++) {
                 let oders = {};
                 oders.o_table = o_tableId;
-                oders.o_pcode = list[i].className;
+                oders.o_pcode = list[i].id;
                 oders.o_pname = list[i].childNodes[0].innerText;
                 oders.o_price = list[i].childNodes[1].innerText
                 oders.o_count = list[i].childNodes[2].innerText
@@ -232,12 +227,12 @@ block content
                 table_list = [];
                 table_list = results;
 
-                let list = order_list.childNodes;
-                for(let i = 0; i < list.length; i++){
-                    if(list[1]){
-                        list[1].remove();
-                    }
-                }
+                let p_list = document.querySelectorAll("tr.p_list");
+                if(p_list) {
+                    p_list.forEach((tr) => {
+                    order_list.removeChild(tr);
+                    });
+                }   
             })
             modal.classList.remove("modal_show")
             modalOverlay.classList.remove("modal_overlay2") 
