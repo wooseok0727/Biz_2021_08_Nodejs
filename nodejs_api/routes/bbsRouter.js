@@ -32,7 +32,15 @@ router.get("/push_find", async (req, res) => {
   await BBS.create(bbsVO);
 
   const result = await BBS.find({});
-  await res.json(result);
+  res.json(result);
+});
+
+router.post("/write", async (req, res) => {
+  console.table(await req.body);
+  await BBS.create(req.body);
+  const result = await BBS.find({});
+
+  res.json(result);
 });
 
 module.exports = router;
