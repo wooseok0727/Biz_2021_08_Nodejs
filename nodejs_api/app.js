@@ -8,7 +8,7 @@ var logger = require("morgan");
 const mongoose = require("mongoose");
 const mongoLocalURL = "mongodb://localhost:27017";
 const mongoAtlasURL =
-  "mongodb+srv://wooseok:12345@cluster0.ivvgw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+  "mongodb+srv://wooseok:<password>@cluster0.ivvgw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 // connection 객체를 변수에 임시 저장
 const dbConn = mongoose.connection;
