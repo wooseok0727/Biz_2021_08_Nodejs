@@ -20,7 +20,8 @@ router.get("/", function (req, res, next) {
  */
 
 router.post("/login", passport.authenticate("local"), (req, res) => {
-  res.json({ result: "OK" });
+  console.log(req.user);
+  res.json({ userid: req.user.userid, password: req.user.password });
 });
 
 export default router;

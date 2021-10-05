@@ -27,7 +27,14 @@ const exportPassport = () => {
         session: true, // 세션 저장하기
       },
       (userid, password, done) => {
-        return done(null, { userid: "root", password: "12345" });
+        /**
+         * login이 성공했을 경우
+         * done() 함수의 2번째 매개변수에
+         * 로그인 정보를 담아주면
+         * router 에서 req.user 객체가 생성되고
+         * 로그인한 정보를 추출할 수 있다
+         */
+        return done(null, { userid: "rott", password: "12345" });
       }
     )
   );
