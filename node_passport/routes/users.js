@@ -2,10 +2,25 @@ import passport from "passport";
 import express from "express";
 
 const router = express.Router();
+import User from "../models/User.js";
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
   res.send("respond with a resource");
+});
+
+// http://localhost:8080/users 응답
+router.post("/", (req, res) => {
+  // 로그인이 수행되어서 session 이 유효한 경우에는
+  // req.user 속성이 존재한다
+  // 로그인이 안되거나 session이 유효하지 않으면
+  // req.user 가 없다
+  if (req.user) {
+    console.log("session OK", req.user);
+    res.json(req.user);
+  } else {
+    res.json([]);
+  }
 });
 
 /**
@@ -42,7 +57,14 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
 router.post("/join", (req, res) => {
   console.log(req.body);
   const { userid, password, email } = req.body;
-  res.json({ userid, password, email });
+
+  const userVO = new User(req.body);
+
+  userVO.save((err, data) => {
+    res.json(data);
+  });
+
+  // res.json({ userid, password, email });
 });
 
 export default router;
