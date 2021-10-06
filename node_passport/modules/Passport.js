@@ -34,7 +34,7 @@ const exportPassport = () => {
          * router 에서 req.user 객체가 생성되고
          * 로그인한 정보를 추출할 수 있다
          */
-        return done(null, { userid: "rott", password: "12345" });
+        return done(null, { userid: "root", password: "12345" });
       }
     )
   );
