@@ -1,6 +1,6 @@
 import passport from "passport";
 import passportLocal from "passport-local";
-import User from "../models/User.js";
+import { members } from "../models/Member.js";
 
 // local login 정책을 수행하는 모듈
 const LocalStrategy = passportLocal.Strategy;
@@ -30,28 +30,28 @@ const exportPassport = () => {
       (userid, password, done) => {
         // Members.js에 선언된 사용자 리스트를 사용하여 인증하기
         // filter를 쓸 때 반드시 배열의 0번째 값을 return
-        /*
+
         const findMember = members.filter((member) => {
-          return member.userId === userId && member.password === password;
+          return member.userId === userid && member.password === password;
         });
         if (findMember && findMember.length > 0) {
           return done(null, findMember[0]);
         } else {
           return done(null, false, { message: "Login FAIL!" });
         }
-		*/
-        members.map((member) => {
-          if (member.userId === userId && member.password === password) {
-            return done(null, member);
-          }
-        });
 
-        members.forEach((member) => {
-          if (member.userId === userId && member.password === password) {
-            return done(null, member);
-          }
-        });
-        return done(null, false, { message: "login fail" });
+        // members.map((member) => {
+        //   if (member.userId === userid && member.password === password) {
+        //     return done(null, member);
+        //   }
+        // });
+
+        // members.forEach((member) => {
+        //   if (member.userId === userid && member.password === password) {
+        //     return done(null, member);
+        //   }
+        // });
+        // return done(null, false, { message: "login fail" });
       }
     )
   );
