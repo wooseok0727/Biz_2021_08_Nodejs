@@ -1,33 +1,33 @@
 const admin = {
-  userId: "admin",
+  userid: "admin",
   password: "1234",
   role: "ADMIN",
   email: "eee@eee.eee",
 };
 
 const user = {
-  userId: "user",
+  userid: "user",
   password: "1234",
   role: "USER",
   email: "ddd@ddd.ddd",
 };
 
 const guest = {
-  userId: "guest",
+  userid: "guest",
   password: "1234",
   role: "GUEST",
   email: "ccc@ccc.ccc",
 };
 
 const park = {
-  userId: "park",
+  userid: "park",
   password: "1234",
   role: "GUEST",
   email: "bbb@bbb.bbb",
 };
 
 const kim = {
-  userId: "kim",
+  userid: "kim",
   password: "1234",
   role: "GUEST",
   email: "aaa@aaa.aaa",

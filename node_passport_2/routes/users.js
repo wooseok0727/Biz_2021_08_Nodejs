@@ -39,7 +39,7 @@ router.post("/", (req, res) => {
 
 router.post("/login", passport.authenticate("local"), (req, res) => {
   console.log(req.user);
-  res.json({ userid: req.user.userId, password: req.user.password });
+  res.json({ userid: req.user.userid, password: req.user.password });
 });
 
 /**
