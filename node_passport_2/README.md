@@ -6,7 +6,7 @@
 
 ## 인증구조
 
-- 로그인 시도 : 정상사용자인지 검사하는 과정(id, password)
+- 로그인 시도 : 정상사용자인지 검사하는 과정( id, password)
 - 정상적인 사용자 : passport 발행, accessToken 발행
 
 ## dependency
